@@ -18,8 +18,8 @@ export class SecurityController {
         return this.securityService.signUp(customer)
     }
 
-    @Get("/logout")
-    logout(@Body() token:string){
-        return this.securityService.signOut(token)
+    @Post("/logout")
+    logout(@Body() token: { token: string }) {
+        return this.securityService.signOut(token.token)
     }
 }

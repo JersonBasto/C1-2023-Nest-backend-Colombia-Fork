@@ -90,12 +90,12 @@ export class SecurityService {
    * Salir del sistema
    *
    * @param {string} JWToken
-   * @memberof SecurityService
+   * @memberof SecurityService;
    */
   signOut(JWToken: string): void {
     this.jwtService.verify(JWToken, {
       secret: jwtConstants.secret,
-      maxAge: '0h',
+      maxAge: '2s',
     });
   }
 }
