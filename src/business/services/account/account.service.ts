@@ -3,7 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { AccountEntity, AccountRepository, AccountTypeEntity, AccountTypeRepository, CustomerEntity } from 'src/data/persistence';
+import { AccountEntity, AccountRepository, AccountTypeEntity, AccountTypeRepository, CustomerEntity, CustomerRepository } from 'src/data/persistence';
 import { NewAccountDTO } from 'src/business/dtos';
 
 @Injectable()
@@ -11,6 +11,7 @@ export class AccountService {
   constructor(
     private readonly accountRepository: AccountRepository,
     private readonly accountTypeRepository: AccountTypeRepository,
+    private readonly customerRepository: CustomerRepository
   ) { }
 
   findAll(): AccountEntity[] {
@@ -26,8 +27,8 @@ export class AccountService {
    */
   createAccount(account: NewAccountDTO): AccountEntity {
     const newAccount = new AccountEntity();
-    const newCustomer = new CustomerEntity()
-    newCustomer.id = account.customer;
+    let newCustomer = new CustomerEntity()
+    newCustomer = this.customerRepository.findOneById(account.customer)
     const newAccountType = new AccountTypeEntity()
     newAccountType.id = account.accountType
     const findAccount = this.accountRepository.findByCustomerId(

@@ -42,7 +42,6 @@ export class SecurityService {
     );
     if (answer) {
       const customer = this.customerRepository.findByEmail(user.email);
-      console.log(this.jwtService.sign({ id: customer.id }));
       return { access_token: this.jwtService.sign({ id: customer.id }) };
     } else throw new UnauthorizedException('Datos de identificación inválidos');
   }

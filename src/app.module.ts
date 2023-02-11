@@ -12,7 +12,23 @@ import { jwtConstants } from './configs/constants.config';
     secret: jwtConstants.secret,
     signOptions: { expiresIn: '24h' },
   })],
-  controllers: [AccountController, CustomerController, DepositController, SecurityController, TransferController],
-  providers: [AccountService, DepositService, TransferService, CustomerService, SecurityService, DepositRepository, CustomerRepository, TransferRespository, DocumentTypeRepository, AccountTypeRepository, AccountRepository]
+  controllers: [
+    AccountController, 
+    CustomerController, 
+    DepositController, 
+    SecurityController, 
+    TransferController],
+  providers: [
+    AccountService, 
+    DepositService, 
+    TransferService, 
+    CustomerService, 
+    SecurityService, 
+    DepositRepository, 
+    CustomerRepository, 
+    TransferRespository, 
+    DocumentTypeRepository, 
+    AccountTypeRepository, 
+    AccountRepository]
 })
 export class AppModule { }
