@@ -26,7 +26,7 @@ export class SecurityService {
     private readonly customerRepository: CustomerRepository,
     private readonly accountService: AccountService,
     private readonly jwtService: JwtService,
-  ) {}
+  ) { }
 
   /**
    * Identificarse en el sistema
@@ -42,7 +42,10 @@ export class SecurityService {
     );
     if (answer) {
       const customer = this.customerRepository.findByEmail(user.email);
-      return { access_token: this.jwtService.sign({ id: customer.id }) };
+      return {
+        access_token: this.jwtService.sign({ id: customer.id }),
+        id: customer.id
+      };
     } else throw new UnauthorizedException('Datos de identificación inválidos');
   }
   /**
@@ -79,7 +82,10 @@ export class SecurityService {
         const account = this.accountService.createAccount(newAccount);
 
         if (account)
-          return { access_token: this.jwtService.sign({ id: customer.id }) };
+          return {
+            access_token: this.jwtService.sign({ id: customer.id }),
+            id: customer.id
+          };
         else throw new InternalServerErrorException();
       } else throw new InternalServerErrorException();
     }
