@@ -3,7 +3,14 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { AccountEntity, AccountRepository, AccountTypeEntity, AccountTypeRepository, CustomerEntity, CustomerRepository } from 'src/data/persistence';
+import {
+  AccountEntity,
+  AccountRepository,
+  AccountTypeEntity,
+  AccountTypeRepository,
+  CustomerEntity,
+  CustomerRepository,
+} from 'src/data/persistence';
 import { NewAccountDTO } from 'src/business/dtos';
 
 @Injectable()
@@ -11,11 +18,11 @@ export class AccountService {
   constructor(
     private readonly accountRepository: AccountRepository,
     private readonly accountTypeRepository: AccountTypeRepository,
-    private readonly customerRepository: CustomerRepository
-  ) { }
+    private readonly customerRepository: CustomerRepository,
+  ) {}
 
   findAll(): AccountEntity[] {
-    return this.accountRepository.findAll()
+    return this.accountRepository.findAll();
   }
 
   /**
@@ -27,19 +34,20 @@ export class AccountService {
    */
   createAccount(account: NewAccountDTO): AccountEntity {
     const newAccount = new AccountEntity();
-    let newCustomer = new CustomerEntity()
-    newCustomer = this.customerRepository.findOneById(account.customer)
-    const newAccountType = new AccountTypeEntity()
-    newAccountType.id = account.accountType
+    let newCustomer = new CustomerEntity();
+    newCustomer = this.customerRepository.findOneById(account.customer);
+    const newAccountType = new AccountTypeEntity();
+    newAccountType.id = account.accountType;
+    newAccountType.name = "CA";
     const findAccount = this.accountRepository.findByCustomerId(
-      account.customer
+      account.customer,
     );
     if (findAccount) {
       throw new BadRequestException();
     } else {
       newAccount.customer = newCustomer;
       newAccount.accountType = newAccountType;
-      this.accountTypeRepository.register(newAccountType)
+      this.accountTypeRepository.register(newAccountType);
       return this.accountRepository.register(newAccount);
     }
   }
@@ -77,9 +85,8 @@ export class AccountService {
       const account = this.accountRepository.findOneById(accountId);
       account.balance = account.balance + amount;
       return this.accountRepository.update(accountId, account);
-    }
-    else {
-      throw new NotFoundException("No existe una cuenta con ese ID")
+    } else {
+      throw new NotFoundException('No existe una cuenta con ese ID');
     }
   }
   /**
@@ -99,9 +106,8 @@ export class AccountService {
       } else {
         throw new NotFoundException('No se puede realizar esta operacion');
       }
-    }
-    else {
-      throw new NotFoundException("No existe cuenta con este ID");
+    } else {
+      throw new NotFoundException('No existe cuenta con este ID');
     }
   }
 
@@ -157,12 +163,11 @@ export class AccountService {
       } else {
         throw new NotFoundException(
           'No se puede cambiar de estado, ya que el tipo de cuenta esta en ' +
-          accountTypeState,
+            accountTypeState,
         );
       }
-    }
-    else {
-      throw new NotFoundException("No se encontro cuenta con ese ID ")
+    } else {
+      throw new NotFoundException('No se encontro cuenta con ese ID ');
     }
   }
 
@@ -199,9 +204,13 @@ export class AccountService {
       );
     } else {
       account.accountType.id = accountTypeId;
-      const accountTypeDataBase = this.accountTypeRepository.findOneById(accountTypeId)
+      const accountTypeDataBase =
+        this.accountTypeRepository.findOneById(accountTypeId);
       this.accountRepository.update(accountId, account);
-      return this.accountTypeRepository.update(accountTypeId, accountTypeDataBase);
+      return this.accountTypeRepository.update(
+        accountTypeId,
+        accountTypeDataBase,
+      );
     }
   }
 
@@ -214,40 +223,43 @@ export class AccountService {
   deleteAccount(accountId: string): void {
     const balance = this.getBalance(accountId);
     if (balance > 0) {
-      throw new BadRequestException('No se puede eliminar, la cuenta tiene saldo');
+      throw new BadRequestException(
+        'No se puede eliminar, la cuenta tiene saldo',
+      );
     } else {
       const state = this.getState(accountId);
       if (state) {
-        throw new BadRequestException('No se puede eliminar, la cuenta se encuentra activa');
+        throw new BadRequestException(
+          'No se puede eliminar, la cuenta se encuentra activa',
+        );
       } else {
         this.accountRepository.delete(accountId);
       }
     }
   }
   findOneById(id: string): AccountEntity {
-    return this.accountRepository.findOneById(id)
+    return this.accountRepository.findOneById(id);
   }
   updateAccount(id: string, account: NewAccountDTO): AccountEntity {
-    const findAccount = this.accountRepository.findOneById(id)
-    const newAccount = new AccountEntity()
-    const newCustomer = new CustomerEntity()
-    newCustomer.id = account.customer
-    const newAccounType = new AccountTypeEntity()
-    newAccounType.id = account.accountType
+    const findAccount = this.accountRepository.findOneById(id);
+    const newAccount = new AccountEntity();
+    const newCustomer = new CustomerEntity();
+    newCustomer.id = account.customer;
+    const newAccounType = new AccountTypeEntity();
+    newAccounType.id = account.accountType;
     if (findAccount) {
-      newAccount.balance = account.balance
-      newAccount.accountType = newAccounType
-      newAccount.customer = newCustomer
-      return this.accountRepository.update(id, newAccount)
-    }
-    else {
-      throw new NotFoundException("No se encontro la cuenta")
+      newAccount.balance = account.balance;
+      newAccount.accountType = newAccounType;
+      newAccount.customer = newCustomer;
+      return this.accountRepository.update(id, newAccount);
+    } else {
+      throw new NotFoundException('No se encontro la cuenta');
     }
   }
 
   createTypeAccount(name: string): AccountTypeEntity {
-    const newAccountType = new AccountTypeEntity()
-    newAccountType.name = name
-    return this.accountTypeRepository.register(newAccountType)
+    const newAccountType = new AccountTypeEntity();
+    newAccountType.name = name;
+    return this.accountTypeRepository.register(newAccountType);
   }
 }

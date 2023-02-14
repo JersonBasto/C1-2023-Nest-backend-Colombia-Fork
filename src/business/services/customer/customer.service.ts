@@ -23,7 +23,7 @@ export class CustomerService {
   createCustomer(customer: newCustomerDTO): CustomerEntity {
     const newCustomer = new CustomerEntity();
     const newDocumentType = new DocumentTypeEntity()
-    newDocumentType.id = customer.documentTypeId;
+    newDocumentType.id = customer.documentType;
     const findCustomer = this.customerRepository.findByEmail(customer.email)
     if (findCustomer) {
       throw new BadRequestException()

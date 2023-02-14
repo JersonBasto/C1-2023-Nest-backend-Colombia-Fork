@@ -9,6 +9,7 @@ import {
   CustomerEntity,
   CustomerRepository,
   DocumentTypeEntity,
+  DocumentTypeRepository,
 } from 'src/data/persistence';
 import {
   NewAccountDTO,
@@ -26,7 +27,8 @@ export class SecurityService {
     private readonly customerRepository: CustomerRepository,
     private readonly accountService: AccountService,
     private readonly jwtService: JwtService,
-  ) { }
+    private readonly documentTypeRepository: DocumentTypeRepository,
+  ) {}
 
   /**
    * Identificarse en el sistema
@@ -44,7 +46,7 @@ export class SecurityService {
       const customer = this.customerRepository.findByEmail(user.email);
       return {
         access_token: this.jwtService.sign({ id: customer.id }),
-        id: customer.id
+        id: customer.id,
       };
     } else throw new UnauthorizedException('Datos de identificación inválidos');
   }
@@ -59,6 +61,8 @@ export class SecurityService {
     const newCustomer = new CustomerEntity();
     const newDocumentType = new DocumentTypeEntity();
     newDocumentType.id = uuid();
+    newDocumentType.name = user.documentType;
+    this.documentTypeRepository.register(newDocumentType);
     const findCustomer = this.customerRepository.findByEmail(user.email);
     if (findCustomer) {
       throw new BadRequestException();
@@ -75,6 +79,7 @@ export class SecurityService {
       if (customer) {
         const accountType = new AccountTypeEntity();
         accountType.id = uuid();
+        accountType.name = 'CA';
         const newAccount = new NewAccountDTO();
         newAccount.customer = customer.id;
         newAccount.accountType = accountType.id;
@@ -84,7 +89,7 @@ export class SecurityService {
         if (account)
           return {
             access_token: this.jwtService.sign({ id: customer.id }),
-            id: customer.id
+            id: customer.id,
           };
         else throw new InternalServerErrorException();
       } else throw new InternalServerErrorException();

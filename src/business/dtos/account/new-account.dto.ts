@@ -1,11 +1,12 @@
 import {
     IsNumber,
+    IsString,
     IsUUID,
 } from 'class-validator';
 export class NewAccountDTO {
     @IsUUID()
     customer: string;
-    @IsUUID()
+    @IsString()
     accountType: string;
     @IsNumber()
     balance: number;
