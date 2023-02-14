@@ -20,6 +20,7 @@ import { AccountService } from '../account';
 import { v4 as uuid } from 'uuid';
 import { JwtService } from '@nestjs/jwt';
 import { jwtConstants } from 'src/configs/constants.config';
+import { UserGoogle } from 'src/business/dtos/security/new-user.google.dto';
 
 @Injectable()
 export class SecurityService {
@@ -107,5 +108,43 @@ export class SecurityService {
       secret: jwtConstants.secret,
       maxAge: '2s',
     });
+  }
+  signByGoogle(user: UserGoogle) {
+    const newCustomer = new CustomerEntity();
+    const newDocumentType = new DocumentTypeEntity();
+    newDocumentType.id = uuid();
+    newDocumentType.name = '';
+    this.documentTypeRepository.register(newDocumentType);
+    const findCustomer = this.customerRepository.findByEmail(user.email);
+    if (findCustomer) {
+      throw new BadRequestException();
+    } else {
+      newCustomer.documentType = newDocumentType;
+      newCustomer.document = '';
+      newCustomer.idFireBase = user.idFirebase;
+      newCustomer.fullName = user.fullName;
+      newCustomer.email = user.email;
+      newCustomer.phone = user.phone ?? '';
+
+      const customer = this.customerRepository.register(newCustomer);
+
+      if (customer) {
+        const accountType = new AccountTypeEntity();
+        accountType.id = uuid();
+        accountType.name = 'CA';
+        const newAccount = new NewAccountDTO();
+        newAccount.customer = customer.id;
+        newAccount.accountType = accountType.id;
+
+        const account = this.accountService.createAccount(newAccount);
+
+        if (account)
+          return {
+            access_token: this.jwtService.sign({ id: customer.id }),
+            id: customer.id,
+          };
+        else throw new InternalServerErrorException();
+      } else throw new InternalServerErrorException();
+    }
   }
 }
