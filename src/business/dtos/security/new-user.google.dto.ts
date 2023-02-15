@@ -1,7 +1,7 @@
 import { IsEmail, IsNumberString, IsString } from 'class-validator';
 
 export class UserGoogle {
-  idFirebase: string;
+  idFireBase: string;
   @IsString()
   fullName: string;
   @IsEmail()

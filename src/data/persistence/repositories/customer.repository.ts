@@ -1,12 +1,13 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CustomerEntity , AccountEntity } from '../entities';
+import { CustomerEntity, AccountEntity } from '../entities';
 import { BodyRepositoryAbstract } from './base/base.repository';
 import { CustomerRepositoryInterface } from './interface/customer/customer-repository.interface';
 
 @Injectable()
 export class CustomerRepository
   extends BodyRepositoryAbstract<CustomerEntity>
-  implements CustomerRepositoryInterface {
+  implements CustomerRepositoryInterface
+{
   register(entity: CustomerEntity): CustomerEntity {
     this.database.push(entity);
     const customerIndex = this.database.findIndex(
@@ -16,7 +17,7 @@ export class CustomerRepository
   }
   update(id: string, entity: CustomerEntity): CustomerEntity {
     const customerIndex = this.database.findIndex(
-      (customer) => customer.id === id && customer.deletedAt===undefined,
+      (customer) => customer.id === id && customer.deletedAt === undefined,
     );
     if (customerIndex >= 0) {
       const data = this.database[customerIndex];
@@ -36,11 +37,12 @@ export class CustomerRepository
     } else {
       this.hardDelete(id);
     }
-
   }
   findAll(): CustomerEntity[] {
-    const allUsers = this.database.filter(customer => customer.deletedAt === undefined)
-    return allUsers
+    const allUsers = this.database.filter(
+      (customer) => customer.deletedAt === undefined,
+    );
+    return allUsers;
   }
   findOneById(id: string): CustomerEntity {
     const customerIndex = this.database.findIndex(
@@ -85,7 +87,7 @@ export class CustomerRepository
     const customer = this.database.filter(
       (customer) => customer.email === email && customer.password === password,
     );
-    if (customer && customer.length>0) {
+    if (customer && customer.length > 0) {
       return true;
     } else {
       return false;
@@ -115,14 +117,14 @@ export class CustomerRepository
     }
   }
   private softDelete(id: string): void {
-    let newCustomer = new CustomerEntity()
+    let newCustomer = new CustomerEntity();
     const customer = this.findOneById(id);
-    newCustomer={
+    newCustomer = {
       ...newCustomer,
       ...customer,
       id: id,
     };
-    newCustomer.deletedAt= Date.now()
+    newCustomer.deletedAt = Date.now();
     this.update(id, newCustomer);
   }
   findByPhone(phone: string): CustomerEntity[] {
@@ -137,5 +139,12 @@ export class CustomerRepository
     } else {
       throw new NotFoundException('No se encontro la informacion');
     }
+  }
+  findByIdFireBase(idFirebase: string): CustomerEntity {
+    const customerIndex = this.database.findIndex(
+      (customer) =>
+        customer.idFireBase === idFirebase && customer.deletedAt === undefined,
+    );
+    return this.database[customerIndex];
   }
 }

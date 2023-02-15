@@ -4,7 +4,7 @@ import { CustomerModel } from 'src/data/models';
 
 export class CustomerEntity implements CustomerModel {
   id = uuid();
-  idFireBase?: string;
+  idFireBase: string;
   documentType: DocumentTypeEntity;
   document: string;
   fullName: string;

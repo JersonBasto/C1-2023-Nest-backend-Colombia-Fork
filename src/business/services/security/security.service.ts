@@ -21,6 +21,8 @@ import { v4 as uuid } from 'uuid';
 import { JwtService } from '@nestjs/jwt';
 import { jwtConstants } from 'src/configs/constants.config';
 import { UserGoogle } from 'src/business/dtos/security/new-user.google.dto';
+import { NotFoundError } from 'rxjs';
+import { NotFoundException } from '@nestjs/common/exceptions';
 
 @Injectable()
 export class SecurityService {
@@ -121,7 +123,7 @@ export class SecurityService {
     } else {
       newCustomer.documentType = newDocumentType;
       newCustomer.document = '';
-      newCustomer.idFireBase = user.idFirebase;
+      newCustomer.idFireBase = user.idFireBase;
       newCustomer.fullName = user.fullName;
       newCustomer.email = user.email;
       newCustomer.phone = user.phone ?? '';
@@ -145,6 +147,18 @@ export class SecurityService {
           };
         else throw new InternalServerErrorException();
       } else throw new InternalServerErrorException();
+    }
+  }
+
+  loginByGoogle(idFirebase: string) {
+    const answer = this.customerRepository.findByIdFireBase(idFirebase);
+    if (answer) {
+      return {
+        access_token: this.jwtService.sign({ id: answer.id }),
+        id: answer.id,
+      };
+    } else {
+      throw new NotFoundException('No se encontro Usuario');
     }
   }
 }

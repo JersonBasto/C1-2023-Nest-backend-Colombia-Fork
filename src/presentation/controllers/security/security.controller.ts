@@ -14,6 +14,11 @@ export class SecurityController {
     return this.securityService.signIn(security);
   }
 
+  @Post('/login/google')
+  loginGoogle(@Body() idFirebase: { id: string }) {
+    return this.securityService.loginByGoogle(idFirebase.id);
+  }
+
   @Post('/register')
   createCustomer(@Body() customer: newCustomerDTO) {
     return this.securityService.signUp(customer);
@@ -26,7 +31,6 @@ export class SecurityController {
 
   @Post('/user-google')
   newUserGoogle(@Body() user: UserGoogle) {
-    console.log(user)
     return this.securityService.signByGoogle(user);
   }
 }
