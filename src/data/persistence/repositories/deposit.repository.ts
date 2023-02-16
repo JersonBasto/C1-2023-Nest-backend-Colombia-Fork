@@ -6,7 +6,8 @@ import { DepositRepositoryInterface } from './interface/deposit/deposit-reposito
 @Injectable()
 export class DepositRepository
   extends BodyRepositoryAbstract<DepositEntity>
-  implements DepositRepositoryInterface {
+  implements DepositRepositoryInterface
+{
   register(entity: DepositEntity): DepositEntity {
     this.database.push(entity);
     return this.database.at(-1) ?? entity;
@@ -24,16 +25,15 @@ export class DepositRepository
     return this.database[depositIndex];
   }
   delete(id: string, soft?: boolean | undefined): void {
-    const deposit = this.findOneById(id)
+    const deposit = this.findOneById(id);
     if (soft || soft === undefined) {
-      this.softDelete(id)
-    }
-    else {
-      this.hardDelete(id)
+      this.softDelete(id);
+    } else {
+      this.hardDelete(id);
     }
   }
   findAll(): DepositEntity[] {
-    return this.database.filter(deposit => deposit.deletedAt === undefined);
+    return this.database.filter((deposit) => deposit.deletedAt === undefined);
   }
   findOneById(id: string): DepositEntity {
     const depositIndex = this.database.findIndex(
@@ -41,9 +41,8 @@ export class DepositRepository
     );
     if (depositIndex >= 0) {
       return this.database[depositIndex];
-    }
-    else {
-      throw new NotFoundException("No se encontro la informacion")
+    } else {
+      throw new NotFoundException('No se encontro la informacion');
     }
   }
   findByAccountId(accountId: string): DepositEntity {
@@ -52,9 +51,8 @@ export class DepositRepository
     );
     if (depositIndex >= 0) {
       return this.database[depositIndex];
-    }
-    else {
-      throw new NotFoundException("No se encontro la informacion")
+    } else {
+      throw new NotFoundException('No se encontro la informacion');
     }
   }
   findByAccountTypeId(accountTypeId: string): DepositEntity {
@@ -63,21 +61,14 @@ export class DepositRepository
     );
     if (depositIndex >= 0) {
       return this.database[depositIndex];
-    }
-    else {
-      throw new NotFoundException("No se encontro la informacion")
+    } else {
+      throw new NotFoundException('No se encontro la informacion');
     }
   }
-  findByCustomerId(customerId: string): DepositEntity {
-    const depositIndex = this.database.findIndex(
+  findByCustomerId(customerId: string): DepositEntity[] {
+    return this.database.filter(
       (deposit) => deposit.account.customer.id === customerId,
     );
-    if (depositIndex >= 0) {
-      return this.database[depositIndex];
-    }
-    else {
-      throw new NotFoundException("No se encontro la informacion")
-    }
   }
   findByEmail(email: string): DepositEntity {
     const depositIndex = this.database.findIndex(
@@ -85,21 +76,18 @@ export class DepositRepository
     );
     if (depositIndex >= 0) {
       return this.database[depositIndex];
-    }
-    else {
-      throw new NotFoundException("No se encontro la informacion")
+    } else {
+      throw new NotFoundException('No se encontro la informacion');
     }
   }
   findByDocumentTypeId(documentTypeId: string): DepositEntity {
     const depositIndex = this.database.findIndex(
-      (deposit) =>
-        deposit.account.customer.documentType.id === documentTypeId,
+      (deposit) => deposit.account.customer.documentType.id === documentTypeId,
     );
     if (depositIndex >= 0) {
       return this.database[depositIndex];
-    }
-    else {
-      throw new NotFoundException("No se encontro la informacion")
+    } else {
+      throw new NotFoundException('No se encontro la informacion');
     }
   }
   findAmountGreaterThan(amount: number): DepositEntity[] {
@@ -110,10 +98,9 @@ export class DepositRepository
       }
     });
     if (arrayAmount.length > 0) {
-      return arrayAmount
-    }
-    else {
-      throw new NotFoundException("No se encontro la informacion")
+      return arrayAmount;
+    } else {
+      throw new NotFoundException('No se encontro la informacion');
     }
   }
   findAmountLessThan(amount: number): DepositEntity[] {
@@ -124,30 +111,37 @@ export class DepositRepository
       }
     });
     if (arrayAmount.length > 0) {
-      return arrayAmount
-    }
-    else {
-      throw new NotFoundException("No se encontro la informacion")
+      return arrayAmount;
+    } else {
+      throw new NotFoundException('No se encontro la informacion');
     }
   }
   private hardDelete(id: string): void {
     const depositIndex = this.database.findIndex(
-      (account) => account.id === id
+      (account) => account.id === id,
     );
     if (depositIndex >= 0) {
       this.database.splice(depositIndex, 1);
-    }
-    else {
-      throw new NotFoundException("No se encontro ningun elemento")
+    } else {
+      throw new NotFoundException('No se encontro ningun elemento');
     }
   }
   private softDelete(id: string): void {
-    const deposit = this.findOneById(id)
-    deposit.deletedAt = Date.now()
-    this.update(id, deposit)
+    const deposit = this.findOneById(id);
+    deposit.deletedAt = Date.now();
+    this.update(id, deposit);
   }
-  findByDateRange(id: string, DateMin: number | Date, DateMax: Number | Date): DepositEntity[] {
-    const arrayDeposites = this.findAll()
-    return arrayDeposites.filter(deposit => deposit.account.id === id && deposit.dateTime >= DateMin && deposit.dateTime <= DateMax)
+  findByDateRange(
+    id: string,
+    DateMin: number | Date,
+    DateMax: Number | Date,
+  ): DepositEntity[] {
+    const arrayDeposites = this.findAll();
+    return arrayDeposites.filter(
+      (deposit) =>
+        deposit.account.id === id &&
+        deposit.dateTime >= DateMin &&
+        deposit.dateTime <= DateMax,
+    );
   }
 }
