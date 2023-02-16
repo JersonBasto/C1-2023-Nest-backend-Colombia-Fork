@@ -85,7 +85,7 @@ export class SecurityService {
         accountType.name = 'CA';
         const newAccount = new NewAccountDTO();
         newAccount.customer = customer.id;
-        newAccount.accountType = accountType.id;
+        newAccount.accountType.id = accountType.id;
 
         const account = this.accountService.createAccount(newAccount);
 
@@ -136,7 +136,7 @@ export class SecurityService {
         accountType.name = 'CA';
         const newAccount = new NewAccountDTO();
         newAccount.customer = customer.id;
-        newAccount.accountType = accountType.id;
+        newAccount.accountType = accountType;
 
         const account = this.accountService.createAccount(newAccount);
 

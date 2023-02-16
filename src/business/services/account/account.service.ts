@@ -12,6 +12,7 @@ import {
   CustomerRepository,
 } from 'src/data/persistence';
 import { NewAccountDTO } from 'src/business/dtos';
+import { v4 as uuid } from 'uuid';
 
 @Injectable()
 export class AccountService {
@@ -37,19 +38,16 @@ export class AccountService {
     let newCustomer = new CustomerEntity();
     newCustomer = this.customerRepository.findOneById(account.customer);
     const newAccountType = new AccountTypeEntity();
-    newAccountType.id = account.accountType;
-    newAccountType.name = "CA";
-    const findAccount = this.accountRepository.findByCustomerId(
-      account.customer,
-    );
-    if (findAccount) {
-      throw new BadRequestException();
+    newAccountType.id = uuid();
+    if (account.accountType.name) {
+      newAccountType.name = account.accountType.name;
     } else {
-      newAccount.customer = newCustomer;
-      newAccount.accountType = newAccountType;
-      this.accountTypeRepository.register(newAccountType);
-      return this.accountRepository.register(newAccount);
+      newAccountType.name = 'CA';
     }
+    newAccount.customer = newCustomer;
+    newAccount.accountType = newAccountType;
+    this.accountTypeRepository.register(newAccountType);
+    return this.accountRepository.register(newAccount);
   }
 
   /**
@@ -246,7 +244,7 @@ export class AccountService {
     const newCustomer = new CustomerEntity();
     newCustomer.id = account.customer;
     const newAccounType = new AccountTypeEntity();
-    newAccounType.id = account.accountType;
+    newAccounType.id = account.accountType.id;
     if (findAccount) {
       newAccount.balance = account.balance;
       newAccount.accountType = newAccounType;
