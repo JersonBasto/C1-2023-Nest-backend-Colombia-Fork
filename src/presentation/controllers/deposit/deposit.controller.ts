@@ -17,19 +17,19 @@ export class DepositController {
     }
 
     @Get(":id")
-    @UseGuards(JwtGuard)
+    //@UseGuards(JwtGuard)
     getDeposit(@Param("id", new ParseUUIDPipe()) id: string): DepositEntity {
         return this.depositService.findOneById(id)
     }
 
     @Post()
-    @UseGuards(JwtGuard)
+    //@UseGuards(JwtGuard)
     createDeposit(@Body() deposit: NewDepositDTO): DepositEntity {
         return this.depositService.createDeposit(deposit)
     }
 
     @Post("/getHistory/:id")
-    @UseGuards(JwtGuard)
+    //@UseGuards(JwtGuard)
     getHistory(@Param("id", new ParseUUIDPipe()) id: string, @Body() data: { actualPage: number, range: number }): DepositEntity[] {
         const newPagination = new PaginationEntity()
         newPagination.actualPage = data.actualPage;
@@ -39,13 +39,13 @@ export class DepositController {
     }
 
     @Put(":id")
-    @UseGuards(JwtGuard)
+    //@UseGuards(JwtGuard)
     updateDeposit(@Param("id", new ParseUUIDPipe()) id: string, @Body() deposit: NewDepositDTO): DepositEntity {
         return this.depositService.updateDeposit(id, deposit)
     }
 
     @Delete(":id")
-    @UseGuards(JwtGuard)
+    //@UseGuards(JwtGuard)
     deleteDeposit(@Param("id", new ParseUUIDPipe()) id: string): void {
         return this.depositService.deleteDeposit(id)
     }

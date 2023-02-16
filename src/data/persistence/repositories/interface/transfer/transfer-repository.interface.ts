@@ -6,7 +6,7 @@ export interface TransferRepositoryInterface
   findByIncomeId(id: string): TransferEntity[];
   findByOutcomeId(id: string): TransferEntity[];
   findByIncomeCustomerId(id: string): TransferEntity;
-  findByOutcomeCustomerId(id: string): TransferEntity;
+  findByOutcomeCustomerId(id: string): TransferEntity[];
   findByAmountGreaterThan(amount: number): TransferEntity[];
   findByAmountLessThan(amount: number): TransferEntity[];
   sortByDate(date: number | Date): TransferEntity[]

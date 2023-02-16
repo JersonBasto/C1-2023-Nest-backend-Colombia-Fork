@@ -14,19 +14,19 @@ export class TransferController {
     }
 
     @Get(":id")
-    @UseGuards(JwtGuard)
+    //@UseGuards(JwtGuard)
     findOneById(@Param("id", new ParseUUIDPipe()) id: string) {
         return this.transferService.findOneById(id)
     }
 
     @Post()
-    @UseGuards(JwtGuard)
+    //@UseGuards(JwtGuard)
     createTransfer(@Body() transfer: NewTransferDTO): TransferEntity {
         return this.transferService.createTransfer(transfer)
     }
 
     @Post("/historyOut/:id")
-    @UseGuards(JwtGuard)
+    //@UseGuards(JwtGuard)
     getHistoryOut(@Param("id", new ParseUUIDPipe()) id: string, @Body() data: { actualPage: number, range: number }) {
         const newPagination = new PaginationEntity()
         newPagination.actualPage = data.actualPage;
@@ -36,12 +36,21 @@ export class TransferController {
     }
 
     @Post("/historyIncome/:id")
-    @UseGuards(JwtGuard)
+    //@UseGuards(JwtGuard)
     getHistoryIncome(@Param("id", new ParseUUIDPipe()) id: string, @Body() data: { actualPage: number, range: number }) {
         const newPagination = new PaginationEntity()
         newPagination.actualPage = data.actualPage;
         const newDataRange = new DataRangeEntity()
         newDataRange.range = data.range;
         return this.transferService.getHistoryIn(id, newPagination, newDataRange)
+    }
+
+    @Post("/history/:id")
+    getHistory(@Param("id",new ParseUUIDPipe())id:string,@Body() data: { actualPage: number, range: number }){
+        const newPagination = new PaginationEntity()
+        newPagination.actualPage = data.actualPage;
+        const newDataRange = new DataRangeEntity()
+        newDataRange.range = data.range;
+        return this.transferService.getHistoryOutcomeCustomerId(id)
     }
 }
