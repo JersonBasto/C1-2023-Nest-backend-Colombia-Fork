@@ -2,6 +2,7 @@ import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Post, Put } from '
 import { CustomerEntity } from 'src/data/persistence';
 import { CustomerService, SecurityService } from 'src/business/services';
 import { newCustomerDTO } from 'src/business/dtos';
+import { UserGoogle } from 'src/business/dtos/security/new-user.google.dto';
 
 @Controller("user")
 export class CustomerController {
@@ -31,6 +32,10 @@ export class CustomerController {
     @Put(":id")
     modifyUser(@Param("id", new ParseUUIDPipe()) id: string, @Body() customer: newCustomerDTO): CustomerEntity {
         return this.customerService.updatedCustomer(id, customer)
+    }
+    @Put("/user-google/:id")
+    modifyUserGoogle(@Param("id", new ParseUUIDPipe()) id: string, @Body() customer: UserGoogle): CustomerEntity {
+        return this.customerService.updatedCustomerGoogle(id, customer)
     }
 
     @Delete(":id")

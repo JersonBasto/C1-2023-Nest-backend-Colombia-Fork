@@ -6,5 +6,7 @@ export class UserGoogle {
   fullName: string;
   @IsEmail()
   email: string;
+  documentType?: string;
+  document?: string;
   phone?: string;
 }

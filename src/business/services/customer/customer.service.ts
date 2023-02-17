@@ -8,6 +8,7 @@ import {
 } from 'src/data/persistence';
 import { newCustomerDTO } from 'src/business/dtos';
 import { v4 as uuid } from 'uuid';
+import { UserGoogle } from 'src/business/dtos/security/new-user.google.dto';
 
 @Injectable()
 export class CustomerService {
@@ -80,6 +81,29 @@ export class CustomerService {
       findCustomer.email = customer.email;
       findCustomer.fullName = customer.fullName;
       findCustomer.phone = customer.phone;
+      return this.customerRepository.update(id, findCustomer);
+    }
+  }
+  updatedCustomerGoogle(id: string, customer: UserGoogle): CustomerEntity {
+    const findCustomer = this.customerRepository.findOneById(id);
+    const findByEmail = this.customerRepository.findByEmail(customer.email);
+    if (findByEmail) {
+      if (findCustomer.id === findByEmail.id) {
+        findCustomer.document = customer.document ?? "";
+        findCustomer.documentType.name = customer.documentType ?? "";
+        findCustomer.email = customer.email;
+        findCustomer.fullName = customer.fullName;
+        findCustomer.phone = customer.phone ?? "";
+        return this.customerRepository.update(id, findCustomer);
+      } else {
+        throw new BadRequestException();
+      }
+    } else {
+      findCustomer.document = customer.document ?? "";
+      findCustomer.documentType.name = customer.documentType ?? "";
+      findCustomer.email = customer.email;
+      findCustomer.fullName = customer.fullName;
+      findCustomer.phone = customer.phone ?? "";
       return this.customerRepository.update(id, findCustomer);
     }
   }
