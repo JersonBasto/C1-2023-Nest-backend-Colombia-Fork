@@ -3,7 +3,6 @@ import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { newCustomerDTO, NewSecurityDTO } from 'src/business/dtos';
 import { UserGoogle } from 'src/business/dtos/security/new-user.google.dto';
 import { SecurityService } from 'src/business/services';
-import { JwtGuard } from 'src/presentation/guards/guard-jwt';
 
 @Controller('security')
 export class SecurityController {

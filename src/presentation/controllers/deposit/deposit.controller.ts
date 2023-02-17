@@ -15,7 +15,6 @@ import { PaginationEntity } from 'src/data/persistence/entities/pagination.entit
 import { DepositService } from 'src/business/services';
 import { NewDepositDTO } from 'src/business/dtos/deposit';
 import { JwtGuard } from 'src/presentation/guards/guard-jwt';
-import { get } from 'http';
 
 @Controller('deposit')
 export class DepositController {
@@ -26,20 +25,20 @@ export class DepositController {
     return this.depositService.findAll();
   }
 
-  @Get(':id')
-  //@UseGuards(JwtGuard)
+  @Post('/get/:id')
+  @UseGuards(JwtGuard)
   getDeposit(@Param('id', new ParseUUIDPipe()) id: string): DepositEntity {
     return this.depositService.findOneById(id);
   }
 
   @Post()
-  //@UseGuards(JwtGuard)
+  @UseGuards(JwtGuard)
   createDeposit(@Body() deposit: NewDepositDTO): DepositEntity {
     return this.depositService.createDeposit(deposit);
   }
 
   @Post('/getHistory/:id')
-  //@UseGuards(JwtGuard)
+  @UseGuards(JwtGuard)
   getHistory(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() data: { actualPage: number; range: number },
@@ -52,7 +51,7 @@ export class DepositController {
   }
 
   @Put(':id')
-  //@UseGuards(JwtGuard)
+  @UseGuards(JwtGuard)
   updateDeposit(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() deposit: NewDepositDTO,
@@ -61,12 +60,13 @@ export class DepositController {
   }
 
   @Delete(':id')
-  //@UseGuards(JwtGuard)
+  @UseGuards(JwtGuard)
   deleteDeposit(@Param('id', new ParseUUIDPipe()) id: string): void {
     return this.depositService.deleteDeposit(id);
   }
 
-  @Get('/all-deposits/:id')
+  @Post('/all-deposits/:id')
+  @UseGuards(JwtGuard)
   findByCustomerId(
     @Param('id', new ParseUUIDPipe()) id: string,
   ): DepositEntity[] {

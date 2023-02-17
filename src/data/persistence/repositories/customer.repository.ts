@@ -85,7 +85,10 @@ export class CustomerRepository
   }
   findEmailAndPassword(email: string, password: string): boolean {
     const customer = this.database.filter(
-      (customer) => customer.email === email && customer.password === password,
+      (customer) =>
+        customer.email === email &&
+        customer.password === password &&
+        customer.deletedAt === undefined,
     );
     if (customer && customer.length > 0) {
       return true;

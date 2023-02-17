@@ -152,7 +152,7 @@ export class SecurityService {
 
   loginByGoogle(idFirebase: string) {
     const answer = this.customerRepository.findByIdFireBase(idFirebase);
-    if (answer) {
+    if (answer && answer.deletedAt === undefined) {
       return {
         access_token: this.jwtService.sign({ id: answer.id }),
         id: answer.id,

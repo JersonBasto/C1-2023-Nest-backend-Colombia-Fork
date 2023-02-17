@@ -25,20 +25,20 @@ export class TransferController {
     return this.transferService.findAll();
   }
 
-  @Get(':id')
-  //@UseGuards(JwtGuard)
+  @Post(':id')
+  @UseGuards(JwtGuard)
   findOneById(@Param('id', new ParseUUIDPipe()) id: string) {
     return this.transferService.findOneById(id);
   }
 
   @Post()
-  //@UseGuards(JwtGuard)
+  @UseGuards(JwtGuard)
   createTransfer(@Body() transfer: NewTransferDTO): TransferEntity {
     return this.transferService.createTransfer(transfer);
   }
 
   @Post('/historyOut/:id')
-  //@UseGuards(JwtGuard)
+  @UseGuards(JwtGuard)
   getHistoryOut(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() data: { actualPage: number; range: number },
@@ -51,7 +51,7 @@ export class TransferController {
   }
 
   @Post('/historyIncome/:id')
-  //@UseGuards(JwtGuard)
+  @UseGuards(JwtGuard)
   getHistoryIncome(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() data: { actualPage: number; range: number },
@@ -64,6 +64,7 @@ export class TransferController {
   }
 
   @Post('/history/:id')
+  @UseGuards(JwtGuard)
   getHistory(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() data: { actualPage: number; range: number },
