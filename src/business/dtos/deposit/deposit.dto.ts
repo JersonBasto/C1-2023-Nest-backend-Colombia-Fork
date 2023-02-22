@@ -2,11 +2,13 @@ import {
     IsNumber,
     IsDate,
     IsUUID,
-    IsString
+    IsString,
+    IsPositive
 } from 'class-validator';
 export class NewDepositDTO {
     @IsUUID()
     account: string;
     @IsNumber()
+    @IsPositive()
     amount = 0;
 }
