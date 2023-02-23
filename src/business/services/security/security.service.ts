@@ -61,7 +61,6 @@ export class SecurityService {
    * @memberof SecurityService
    */
   signUp(user: newCustomerDTO): {} {
-    console.log(user);
     const newCustomer = new CustomerEntity();
     const newDocumentType = new DocumentTypeEntity();
     newDocumentType.id = uuid();
@@ -85,7 +84,6 @@ export class SecurityService {
         accountType.id = uuid();
         accountType.name = 'CA';
         const newAccount = new NewAccountDTO();
-        console.log(accountType);
         newAccount.customer = customer.id;
         newAccount.accountType = accountType;
 

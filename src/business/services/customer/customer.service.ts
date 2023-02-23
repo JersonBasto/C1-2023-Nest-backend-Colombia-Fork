@@ -64,6 +64,7 @@ export class CustomerService {
    * @memberof CustomerService
    */
   updatedCustomer(id: string, customer: newCustomerDTO): CustomerEntity {
+    console.log("Imprime: "+customer)
     const findCustomer = this.customerRepository.findOneById(id);
     const findByEmail = this.customerRepository.findByEmail(customer.email);
     if (findByEmail) {
