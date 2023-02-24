@@ -134,7 +134,7 @@ export class DepositRepository
   findByDateRange(
     id: string,
     DateMin: number | Date,
-    DateMax: Number | Date,
+    DateMax: number | Date,
   ): DepositEntity[] {
     const arrayDeposites = this.findAll();
     return arrayDeposites.filter(

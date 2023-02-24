@@ -119,7 +119,7 @@ export class SecurityService {
     this.documentTypeRepository.register(newDocumentType);
     const findCustomer = this.customerRepository.findByEmail(user.email);
     if (findCustomer) {
-      throw new BadRequestException();
+      throw new BadRequestException('El usuario ya se encuentra registrado');
     } else {
       newCustomer.documentType = newDocumentType;
       newCustomer.document = '';
